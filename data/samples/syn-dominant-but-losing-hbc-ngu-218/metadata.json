@@ -1,0 +1,956 @@
+{
+  "match_id": "syn-dominant-but-losing-hbc-ngu-218",
+  "schema_version": "1.0",
+  "synthetic": true,
+  "disclaimer": "Fully synthetic data. Clubs, players, venues and events are procedurally generated.",
+  "generator": {
+    "name": "matchsim",
+    "version": "0.1.0",
+    "seed": 218,
+    "scenario": "dominant_but_losing",
+    "scenario_description": "Home side controls the ball and creates more, but a direct away side wins on the counter.",
+    "attempts": 19
+  },
+  "competition": "Inside the Game Synthetic League",
+  "venue": "The Quayside",
+  "referee": "Ruben Landen",
+  "weather": "cold_and_dry",
+  "pitch": {
+    "length_m": 105.0,
+    "width_m": 68.0
+  },
+  "attacking_direction": {
+    "1": {
+      "hbc": "right",
+      "ngu": "left"
+    },
+    "2": {
+      "hbc": "left",
+      "ngu": "right"
+    }
+  },
+  "home": {
+    "team_id": "hbc",
+    "name": "Harbour City",
+    "short": "HBC",
+    "colors": [
+      "#6CABDD",
+      "#1C2C5B"
+    ],
+    "formation": "3-5-2",
+    "style": {
+      "possession": 0.66,
+      "press": 0.75,
+      "directness": 0.25
+    },
+    "strength": 1.043,
+    "players": [
+      {
+        "player_id": "hbc-01",
+        "name": "Emil Garero",
+        "short_name": "E. Garero",
+        "number": 1,
+        "role": "GK",
+        "attributes": {
+          "passing": 69,
+          "vision": 52,
+          "dribbling": 31,
+          "finishing": 28,
+          "shot_power": 57,
+          "tackling": 25,
+          "pace": 56,
+          "goalkeeping": 91,
+          "stamina": 78,
+          "composure": 85
+        },
+        "top_speed_kmh": 32.8,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "hbc-02",
+        "name": "Hugo Keseau",
+        "short_name": "H. Keseau",
+        "number": 31,
+        "role": "CB",
+        "attributes": {
+          "passing": 65,
+          "vision": 63,
+          "dribbling": 51,
+          "finishing": 30,
+          "shot_power": 72,
+          "tackling": 88,
+          "pace": 68,
+          "goalkeeping": 20,
+          "stamina": 87,
+          "composure": 79
+        },
+        "top_speed_kmh": 34.2,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "hbc-03",
+        "name": "Ethan Holden",
+        "short_name": "E. Holden",
+        "number": 4,
+        "role": "CB",
+        "attributes": {
+          "passing": 63,
+          "vision": 46,
+          "dribbling": 60,
+          "finishing": 27,
+          "shot_power": 56,
+          "tackling": 89,
+          "pace": 65,
+          "goalkeeping": 13,
+          "stamina": 92,
+          "composure": 61
+        },
+        "top_speed_kmh": 33.5,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "hbc-04",
+        "name": "Tariq Norham",
+        "short_name": "T. Norham",
+        "number": 6,
+        "role": "CB",
+        "attributes": {
+          "passing": 65,
+          "vision": 48,
+          "dribbling": 53,
+          "finishing": 32,
+          "shot_power": 57,
+          "tackling": 80,
+          "pace": 57,
+          "goalkeeping": 5,
+          "stamina": 91,
+          "composure": 82
+        },
+        "top_speed_kmh": 33.1,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "hbc-05",
+        "name": "Sami Branden",
+        "short_name": "S. Branden",
+        "number": 19,
+        "role": "RWB",
+        "attributes": {
+          "passing": 71,
+          "vision": 66,
+          "dribbling": 59,
+          "finishing": 50,
+          "shot_power": 67,
+          "tackling": 65,
+          "pace": 76,
+          "goalkeeping": 5,
+          "stamina": 61,
+          "composure": 87
+        },
+        "top_speed_kmh": 34.6,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "hbc-06",
+        "name": "Owen Dovero",
+        "short_name": "O. Dovero",
+        "number": 17,
+        "role": "DM",
+        "attributes": {
+          "passing": 86,
+          "vision": 63,
+          "dribbling": 59,
+          "finishing": 49,
+          "shot_power": 64,
+          "tackling": 73,
+          "pace": 58,
+          "goalkeeping": 5,
+          "stamina": 77,
+          "composure": 81
+        },
+        "top_speed_kmh": 32.9,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "hbc-07",
+        "name": "Leo Kalez",
+        "short_name": "L. Kalez",
+        "number": 27,
+        "role": "CM",
+        "attributes": {
+          "passing": 89,
+          "vision": 68,
+          "dribbling": 75,
+          "finishing": 52,
+          "shot_power": 72,
+          "tackling": 63,
+          "pace": 73,
+          "goalkeeping": 12,
+          "stamina": 77,
+          "composure": 72
+        },
+        "top_speed_kmh": 34.5,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "hbc-08",
+        "name": "Rio Norez",
+        "short_name": "R. Norez",
+        "number": 33,
+        "role": "CM",
+        "attributes": {
+          "passing": 73,
+          "vision": 68,
+          "dribbling": 75,
+          "finishing": 44,
+          "shot_power": 57,
+          "tackling": 48,
+          "pace": 54,
+          "goalkeeping": 5,
+          "stamina": 86,
+          "composure": 58
+        },
+        "top_speed_kmh": 32.6,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "hbc-09",
+        "name": "Theo Moraro",
+        "short_name": "T. Moraro",
+        "number": 35,
+        "role": "LWB",
+        "attributes": {
+          "passing": 82,
+          "vision": 72,
+          "dribbling": 80,
+          "finishing": 42,
+          "shot_power": 60,
+          "tackling": 65,
+          "pace": 83,
+          "goalkeeping": 5,
+          "stamina": 72,
+          "composure": 90
+        },
+        "top_speed_kmh": 35.9,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "hbc-10",
+        "name": "Elias Corini",
+        "short_name": "E. Corini",
+        "number": 16,
+        "role": "ST",
+        "attributes": {
+          "passing": 70,
+          "vision": 70,
+          "dribbling": 68,
+          "finishing": 74,
+          "shot_power": 90,
+          "tackling": 53,
+          "pace": 77,
+          "goalkeeping": 5,
+          "stamina": 82,
+          "composure": 70
+        },
+        "top_speed_kmh": 34.2,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "hbc-11",
+        "name": "Owen Tormont",
+        "short_name": "O. Tormont",
+        "number": 38,
+        "role": "ST",
+        "attributes": {
+          "passing": 68,
+          "vision": 70,
+          "dribbling": 69,
+          "finishing": 72,
+          "shot_power": 80,
+          "tackling": 36,
+          "pace": 81,
+          "goalkeeping": 7,
+          "stamina": 80,
+          "composure": 59
+        },
+        "top_speed_kmh": 35.0,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "hbc-12",
+        "name": "Matteo Seldale",
+        "short_name": "M. Seldale",
+        "number": 29,
+        "role": "GK",
+        "attributes": {
+          "passing": 60,
+          "vision": 48,
+          "dribbling": 32,
+          "finishing": 5,
+          "shot_power": 31,
+          "tackling": 13,
+          "pace": 44,
+          "goalkeeping": 68,
+          "stamina": 72,
+          "composure": 62
+        },
+        "top_speed_kmh": 31.3,
+        "stamina": 1.0,
+        "starter": false
+      },
+      {
+        "player_id": "hbc-13",
+        "name": "Gabriel Quinden",
+        "short_name": "G. Quinden",
+        "number": 22,
+        "role": "ST",
+        "attributes": {
+          "passing": 64,
+          "vision": 49,
+          "dribbling": 45,
+          "finishing": 28,
+          "shot_power": 58,
+          "tackling": 73,
+          "pace": 71,
+          "goalkeeping": 8,
+          "stamina": 87,
+          "composure": 80
+        },
+        "top_speed_kmh": 34.3,
+        "stamina": 1.0,
+        "starter": false
+      },
+      {
+        "player_id": "hbc-14",
+        "name": "Rio Corari",
+        "short_name": "R. Corari",
+        "number": 28,
+        "role": "ST",
+        "attributes": {
+          "passing": 77,
+          "vision": 68,
+          "dribbling": 63,
+          "finishing": 49,
+          "shot_power": 72,
+          "tackling": 71,
+          "pace": 80,
+          "goalkeeping": 19,
+          "stamina": 67,
+          "composure": 77
+        },
+        "top_speed_kmh": 34.4,
+        "stamina": 1.0,
+        "starter": false
+      },
+      {
+        "player_id": "hbc-15",
+        "name": "Matteo Lanero",
+        "short_name": "M. Lanero",
+        "number": 9,
+        "role": "DM",
+        "attributes": {
+          "passing": 78,
+          "vision": 55,
+          "dribbling": 73,
+          "finishing": 38,
+          "shot_power": 62,
+          "tackling": 67,
+          "pace": 62,
+          "goalkeeping": 5,
+          "stamina": 83,
+          "composure": 90
+        },
+        "top_speed_kmh": 33.7,
+        "stamina": 1.0,
+        "starter": false
+      },
+      {
+        "player_id": "hbc-16",
+        "name": "Nico Valden",
+        "short_name": "N. Valden",
+        "number": 20,
+        "role": "RWB",
+        "attributes": {
+          "passing": 80,
+          "vision": 87,
+          "dribbling": 73,
+          "finishing": 75,
+          "shot_power": 66,
+          "tackling": 68,
+          "pace": 74,
+          "goalkeeping": 5,
+          "stamina": 89,
+          "composure": 96
+        },
+        "top_speed_kmh": 33.5,
+        "stamina": 1.0,
+        "starter": false
+      },
+      {
+        "player_id": "hbc-17",
+        "name": "Ethan Dovaro",
+        "short_name": "E. Dovaro",
+        "number": 12,
+        "role": "AM",
+        "attributes": {
+          "passing": 73,
+          "vision": 81,
+          "dribbling": 73,
+          "finishing": 66,
+          "shot_power": 65,
+          "tackling": 45,
+          "pace": 60,
+          "goalkeeping": 5,
+          "stamina": 72,
+          "composure": 54
+        },
+        "top_speed_kmh": 33.1,
+        "stamina": 1.0,
+        "starter": false
+      },
+      {
+        "player_id": "hbc-18",
+        "name": "Andrés Rosrick",
+        "short_name": "A. Rosrick",
+        "number": 13,
+        "role": "LW",
+        "attributes": {
+          "passing": 72,
+          "vision": 77,
+          "dribbling": 74,
+          "finishing": 72,
+          "shot_power": 66,
+          "tackling": 44,
+          "pace": 78,
+          "goalkeeping": 8,
+          "stamina": 69,
+          "composure": 56
+        },
+        "top_speed_kmh": 34.0,
+        "stamina": 1.0,
+        "starter": false
+      },
+      {
+        "player_id": "hbc-19",
+        "name": "Andrés Torner",
+        "short_name": "A. Torner",
+        "number": 8,
+        "role": "LWB",
+        "attributes": {
+          "passing": 66,
+          "vision": 61,
+          "dribbling": 74,
+          "finishing": 70,
+          "shot_power": 67,
+          "tackling": 42,
+          "pace": 78,
+          "goalkeeping": 5,
+          "stamina": 71,
+          "composure": 80
+        },
+        "top_speed_kmh": 34.2,
+        "stamina": 1.0,
+        "starter": false
+      },
+      {
+        "player_id": "hbc-20",
+        "name": "Andrés Selner",
+        "short_name": "A. Selner",
+        "number": 32,
+        "role": "CB",
+        "attributes": {
+          "passing": 65,
+          "vision": 50,
+          "dribbling": 54,
+          "finishing": 40,
+          "shot_power": 62,
+          "tackling": 82,
+          "pace": 53,
+          "goalkeeping": 5,
+          "stamina": 80,
+          "composure": 77
+        },
+        "top_speed_kmh": 32.3,
+        "stamina": 1.0,
+        "starter": false
+      }
+    ]
+  },
+  "away": {
+    "team_id": "ngu",
+    "name": "Northgate United",
+    "short": "NGU",
+    "colors": [
+      "#1D428A",
+      "#FDB913"
+    ],
+    "formation": "4-3-3",
+    "style": {
+      "possession": 0.45,
+      "press": 0.45,
+      "directness": 0.65
+    },
+    "strength": 0.986,
+    "players": [
+      {
+        "player_id": "ngu-01",
+        "name": "Sven Quinner",
+        "short_name": "S. Quinner",
+        "number": 1,
+        "role": "GK",
+        "attributes": {
+          "passing": 59,
+          "vision": 34,
+          "dribbling": 17,
+          "finishing": 10,
+          "shot_power": 39,
+          "tackling": 17,
+          "pace": 46,
+          "goalkeeping": 69,
+          "stamina": 77,
+          "composure": 47
+        },
+        "top_speed_kmh": 32.7,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "ngu-02",
+        "name": "Joel Garmont",
+        "short_name": "J. Garmont",
+        "number": 27,
+        "role": "RB",
+        "attributes": {
+          "passing": 61,
+          "vision": 51,
+          "dribbling": 67,
+          "finishing": 21,
+          "shot_power": 47,
+          "tackling": 57,
+          "pace": 58,
+          "goalkeeping": 9,
+          "stamina": 70,
+          "composure": 52
+        },
+        "top_speed_kmh": 33.7,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "ngu-03",
+        "name": "Emil Ardham",
+        "short_name": "E. Ardham",
+        "number": 31,
+        "role": "CB",
+        "attributes": {
+          "passing": 52,
+          "vision": 55,
+          "dribbling": 42,
+          "finishing": 22,
+          "shot_power": 53,
+          "tackling": 74,
+          "pace": 52,
+          "goalkeeping": 5,
+          "stamina": 72,
+          "composure": 54
+        },
+        "top_speed_kmh": 32.8,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "ngu-04",
+        "name": "Noah Ostmont",
+        "short_name": "N. Ostmont",
+        "number": 5,
+        "role": "CB",
+        "attributes": {
+          "passing": 64,
+          "vision": 41,
+          "dribbling": 60,
+          "finishing": 27,
+          "shot_power": 61,
+          "tackling": 80,
+          "pace": 60,
+          "goalkeeping": 5,
+          "stamina": 83,
+          "composure": 81
+        },
+        "top_speed_kmh": 32.4,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "ngu-05",
+        "name": "Oscar Holdale",
+        "short_name": "O. Holdale",
+        "number": 34,
+        "role": "LB",
+        "attributes": {
+          "passing": 77,
+          "vision": 64,
+          "dribbling": 75,
+          "finishing": 45,
+          "shot_power": 56,
+          "tackling": 61,
+          "pace": 68,
+          "goalkeeping": 16,
+          "stamina": 57,
+          "composure": 68
+        },
+        "top_speed_kmh": 32.4,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "ngu-06",
+        "name": "Pedro Dovford",
+        "short_name": "P. Dovford",
+        "number": 20,
+        "role": "DM",
+        "attributes": {
+          "passing": 81,
+          "vision": 70,
+          "dribbling": 70,
+          "finishing": 48,
+          "shot_power": 63,
+          "tackling": 82,
+          "pace": 55,
+          "goalkeeping": 6,
+          "stamina": 72,
+          "composure": 76
+        },
+        "top_speed_kmh": 33.9,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "ngu-07",
+        "name": "Max Valner",
+        "short_name": "M. Valner",
+        "number": 17,
+        "role": "CM",
+        "attributes": {
+          "passing": 92,
+          "vision": 77,
+          "dribbling": 67,
+          "finishing": 55,
+          "shot_power": 61,
+          "tackling": 63,
+          "pace": 62,
+          "goalkeeping": 5,
+          "stamina": 77,
+          "composure": 81
+        },
+        "top_speed_kmh": 33.9,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "ngu-08",
+        "name": "Alex Belwell",
+        "short_name": "A. Belwell",
+        "number": 21,
+        "role": "CM",
+        "attributes": {
+          "passing": 76,
+          "vision": 70,
+          "dribbling": 73,
+          "finishing": 64,
+          "shot_power": 70,
+          "tackling": 61,
+          "pace": 73,
+          "goalkeeping": 5,
+          "stamina": 73,
+          "composure": 73
+        },
+        "top_speed_kmh": 34.0,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "ngu-09",
+        "name": "Sami Dalner",
+        "short_name": "S. Dalner",
+        "number": 39,
+        "role": "RW",
+        "attributes": {
+          "passing": 74,
+          "vision": 84,
+          "dribbling": 92,
+          "finishing": 78,
+          "shot_power": 76,
+          "tackling": 48,
+          "pace": 94,
+          "goalkeeping": 5,
+          "stamina": 63,
+          "composure": 91
+        },
+        "top_speed_kmh": 35.1,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "ngu-10",
+        "name": "Tariq Pelini",
+        "short_name": "T. Pelini",
+        "number": 3,
+        "role": "ST",
+        "attributes": {
+          "passing": 68,
+          "vision": 67,
+          "dribbling": 71,
+          "finishing": 82,
+          "shot_power": 81,
+          "tackling": 38,
+          "pace": 85,
+          "goalkeeping": 11,
+          "stamina": 77,
+          "composure": 77
+        },
+        "top_speed_kmh": 34.2,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "ngu-11",
+        "name": "Adam Branwell",
+        "short_name": "A. Branwell",
+        "number": 30,
+        "role": "LW",
+        "attributes": {
+          "passing": 72,
+          "vision": 71,
+          "dribbling": 73,
+          "finishing": 63,
+          "shot_power": 70,
+          "tackling": 35,
+          "pace": 84,
+          "goalkeeping": 16,
+          "stamina": 80,
+          "composure": 82
+        },
+        "top_speed_kmh": 35.0,
+        "stamina": 1.0,
+        "starter": true
+      },
+      {
+        "player_id": "ngu-12",
+        "name": "Kofi Selaro",
+        "short_name": "K. Selaro",
+        "number": 12,
+        "role": "GK",
+        "attributes": {
+          "passing": 48,
+          "vision": 51,
+          "dribbling": 15,
+          "finishing": 10,
+          "shot_power": 40,
+          "tackling": 38,
+          "pace": 54,
+          "goalkeeping": 84,
+          "stamina": 83,
+          "composure": 77
+        },
+        "top_speed_kmh": 32.9,
+        "stamina": 1.0,
+        "starter": false
+      },
+      {
+        "player_id": "ngu-13",
+        "name": "Adam Kalssen",
+        "short_name": "A. Kalssen",
+        "number": 36,
+        "role": "RW",
+        "attributes": {
+          "passing": 49,
+          "vision": 48,
+          "dribbling": 41,
+          "finishing": 25,
+          "shot_power": 60,
+          "tackling": 68,
+          "pace": 58,
+          "goalkeeping": 11,
+          "stamina": 83,
+          "composure": 65
+        },
+        "top_speed_kmh": 33.3,
+        "stamina": 1.0,
+        "starter": false
+      },
+      {
+        "player_id": "ngu-14",
+        "name": "Victor Pelssen",
+        "short_name": "V. Pelssen",
+        "number": 15,
+        "role": "RB",
+        "attributes": {
+          "passing": 62,
+          "vision": 57,
+          "dribbling": 60,
+          "finishing": 45,
+          "shot_power": 67,
+          "tackling": 63,
+          "pace": 70,
+          "goalkeeping": 5,
+          "stamina": 73,
+          "composure": 84
+        },
+        "top_speed_kmh": 34.5,
+        "stamina": 1.0,
+        "starter": false
+      },
+      {
+        "player_id": "ngu-15",
+        "name": "Pedro Kalsen",
+        "short_name": "P. Kalsen",
+        "number": 2,
+        "role": "DM",
+        "attributes": {
+          "passing": 79,
+          "vision": 66,
+          "dribbling": 71,
+          "finishing": 52,
+          "shot_power": 69,
+          "tackling": 78,
+          "pace": 54,
+          "goalkeeping": 14,
+          "stamina": 74,
+          "composure": 70
+        },
+        "top_speed_kmh": 33.4,
+        "stamina": 1.0,
+        "starter": false
+      },
+      {
+        "player_id": "ngu-16",
+        "name": "Matteo Kalini",
+        "short_name": "M. Kalini",
+        "number": 22,
+        "role": "CM",
+        "attributes": {
+          "passing": 87,
+          "vision": 70,
+          "dribbling": 72,
+          "finishing": 62,
+          "shot_power": 85,
+          "tackling": 68,
+          "pace": 89,
+          "goalkeeping": 5,
+          "stamina": 77,
+          "composure": 68
+        },
+        "top_speed_kmh": 35.0,
+        "stamina": 1.0,
+        "starter": false
+      },
+      {
+        "player_id": "ngu-17",
+        "name": "Yusuf Ardrick",
+        "short_name": "Y. Ardrick",
+        "number": 13,
+        "role": "AM",
+        "attributes": {
+          "passing": 67,
+          "vision": 67,
+          "dribbling": 74,
+          "finishing": 59,
+          "shot_power": 56,
+          "tackling": 37,
+          "pace": 60,
+          "goalkeeping": 5,
+          "stamina": 89,
+          "composure": 73
+        },
+        "top_speed_kmh": 33.8,
+        "stamina": 1.0,
+        "starter": false
+      },
+      {
+        "player_id": "ngu-18",
+        "name": "Liam Cordale",
+        "short_name": "L. Cordale",
+        "number": 28,
+        "role": "LB",
+        "attributes": {
+          "passing": 70,
+          "vision": 73,
+          "dribbling": 79,
+          "finishing": 72,
+          "shot_power": 69,
+          "tackling": 44,
+          "pace": 82,
+          "goalkeeping": 14,
+          "stamina": 73,
+          "composure": 70
+        },
+        "top_speed_kmh": 34.6,
+        "stamina": 1.0,
+        "starter": false
+      },
+      {
+        "player_id": "ngu-19",
+        "name": "Ethan Ardton",
+        "short_name": "E. Ardton",
+        "number": 10,
+        "role": "ST",
+        "attributes": {
+          "passing": 73,
+          "vision": 51,
+          "dribbling": 61,
+          "finishing": 91,
+          "shot_power": 68,
+          "tackling": 35,
+          "pace": 79,
+          "goalkeeping": 5,
+          "stamina": 82,
+          "composure": 71
+        },
+        "top_speed_kmh": 34.7,
+        "stamina": 1.0,
+        "starter": false
+      },
+      {
+        "player_id": "ngu-20",
+        "name": "Alex Torton",
+        "short_name": "A. Torton",
+        "number": 16,
+        "role": "CB",
+        "attributes": {
+          "passing": 58,
+          "vision": 54,
+          "dribbling": 45,
+          "finishing": 31,
+          "shot_power": 64,
+          "tackling": 84,
+          "pace": 61,
+          "goalkeeping": 5,
+          "stamina": 82,
+          "composure": 68
+        },
+        "top_speed_kmh": 33.0,
+        "stamina": 1.0,
+        "starter": false
+      }
+    ]
+  },
+  "final_score": {
+    "hbc": 0,
+    "ngu": 3
+  },
+  "period_lengths_s": [
+    2898.8,
+    2900.8
+  ]
+}

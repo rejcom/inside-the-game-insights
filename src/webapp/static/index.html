@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inside the Game – Match Insights</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <div>
+        <div class="brand-title">Inside the Game</div>
+        <div class="brand-sub">Synthetic Match Insights Engine</div>
+      </div>
+    </div>
+    <div class="controls">
+      <label class="field">
+        <span>Match</span>
+        <select id="matchSelect" aria-label="Match"></select>
+      </label>
+      <div class="segmented" role="tablist" aria-label="Mode">
+        <button id="modeReplay" class="active" role="tab" title="Replay a recorded Foundry run">Replay</button>
+        <button id="modeLive" role="tab" title="Run the agents live on this match">Live agents</button>
+      </div>
+      <span id="engineBadge" class="engine-badge">–</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="stage">
+      <nav id="profileTabs" class="profile-tabs" aria-label="Viewer profile"></nav>
+
+      <div class="screen" id="screen">
+        <svg id="pitch" viewBox="-4 -4 113 76" preserveAspectRatio="xMidYMid meet" aria-label="Pitch">
+          <defs>
+            <pattern id="stripes" width="10.5" height="68" patternUnits="userSpaceOnUse">
+              <rect width="5.25" height="68" fill="var(--grass-a)"/>
+              <rect x="5.25" width="5.25" height="68" fill="var(--grass-b)"/>
+            </pattern>
+            <radialGradient id="ballGlow"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+          </defs>
+          <rect x="-4" y="-4" width="113" height="76" fill="var(--grass-b)"/>
+          <rect width="105" height="68" fill="url(#stripes)"/>
+          <g class="lines">
+            <rect width="105" height="68"/>
+            <line x1="52.5" y1="0" x2="52.5" y2="68"/>
+            <circle cx="52.5" cy="34" r="9.15"/>
+            <circle cx="52.5" cy="34" r=".4" class="spot"/>
+            <rect x="0" y="13.84" width="16.5" height="40.32"/>
+            <rect x="88.5" y="13.84" width="16.5" height="40.32"/>
+            <rect x="0" y="24.84" width="5.5" height="18.32"/>
+            <rect x="99.5" y="24.84" width="5.5" height="18.32"/>
+            <circle cx="11" cy="34" r=".4" class="spot"/>
+            <circle cx="94" cy="34" r=".4" class="spot"/>
+            <path d="M16.5 26.7 A9.15 9.15 0 0 1 16.5 41.3"/>
+            <path d="M88.5 26.7 A9.15 9.15 0 0 0 88.5 41.3"/>
+            <rect x="-2" y="30.34" width="2" height="7.32" class="goal"/>
+            <rect x="105" y="30.34" width="2" height="7.32" class="goal"/>
+          </g>
+          <g id="trail"></g>
+          <circle id="ballGlowEl" r="2.6" fill="url(#ballGlow)"/>
+          <circle id="ball" r=".9"/>
+          <g id="actorTag" class="actor-tag">
+            <rect id="actorBg" rx="1.2" height="3.4"/>
+            <text id="actorText" y="2.45"></text>
+          </g>
+        </svg>
+
+        <div class="scorebug" id="scorebug">
+          <div class="sb-team" id="sbHome"><span class="sb-color"></span><span class="sb-name"></span></div>
+          <div class="sb-score" id="sbScore">0–0</div>
+          <div class="sb-team" id="sbAway"><span class="sb-name"></span><span class="sb-color"></span></div>
+          <div class="sb-clock" id="sbClock">00:00</div>
+        </div>
+        <div class="viewer-chip" id="viewerChip"></div>
+
+        <div class="slot slot-corner" id="slot-corner"></div>
+        <div class="slot slot-lower" id="slot-lower"></div>
+        <div class="slot slot-center" id="slot-center"></div>
+        <div class="slot slot-fullscreen" id="slot-fullscreen"></div>
+        <div class="live-banner" id="liveBanner" hidden>LIVE · agents running</div>
+      </div>
+
+      <div class="transport">
+        <button id="playBtn" class="icon-btn" aria-label="Play">▶</button>
+        <div class="speeds" id="speeds" role="group" aria-label="Playback speed"></div>
+        <button id="nextMomentBtn" class="text-btn" title="Jump to the next agent-generated moment">Next key moment ⏭</button>
+        <div class="time" id="timeLabel">00:00</div>
+      </div>
+      <div class="timeline" id="timeline" aria-label="Match timeline">
+        <svg id="timelineSvg" preserveAspectRatio="none"></svg>
+        <div class="playhead" id="playhead"></div>
+      </div>
+      <div class="legend"><span class="lg home"></span><span id="lgHome"></span> momentum
+        <span class="lg away"></span><span id="lgAway"></span> momentum
+        <span class="lg chaos"></span> chaos index</div>
+
+      <section class="compare">
+        <h2>Same moment · four viewers</h2>
+        <div class="compare-grid" id="compareGrid"></div>
+      </section>
+    </section>
+
+    <aside class="sidebar">
+      <div class="sidebar-head">
+        <h2>Agent activity</h2>
+        <div class="pipeline">
+          <span>Analyst</span><span>Tactician</span><span>Narrator</span><span>Fact guard</span><span>Persona</span><span>Producer</span>
+        </div>
+        <div class="legend-modes"><span class="mode llm">LLM</span><span class="mode deterministic">deterministic</span><span class="mode fallback">fallback</span></div>
+      </div>
+      <ol class="feed" id="feed"></ol>
+    </aside>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
