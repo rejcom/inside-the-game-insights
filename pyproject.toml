@@ -12,12 +12,16 @@ requires-python = ">=3.11"
 dependencies = []
 
 [project.optional-dependencies]
-agents = ["agent-framework-core>=1.22", "agent-framework-foundry>=1.15", "azure-identity>=1.26", "pydantic>=2"]
+agents = ["agent-framework-core>=1.22", "agent-framework-foundry>=1.15", "azure-identity>=1.26", "pydantic>=2",
+          "azure-monitor-opentelemetry>=1.8", "azure-eventhub>=5.15", "azure-eventhub-checkpointstoreblob-aio>=1.2",
+          "aiohttp>=3.9"]
 dev = ["pytest>=8", "agent-framework-core>=1.22", "agent-framework-foundry>=1.15", "azure-identity>=1.26"]
 
 [project.scripts]
 matchsim = "matchsim.cli:main"
 insights = "insights.cli:main"
+insights-worker = "insights.worker:main"
+insights-player = "webapp.server:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

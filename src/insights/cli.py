@@ -14,6 +14,7 @@ from matchsim.stream import load_match
 
 from .agents import AgentSettings
 from .pipeline import InsightsPipeline
+from .telemetry import setup_telemetry
 
 
 def main(argv: list[str] | None = None) -> None:
@@ -31,6 +32,7 @@ def main(argv: list[str] | None = None) -> None:
         if hasattr(stream, "reconfigure"):
             stream.reconfigure(encoding="utf-8")
 
+    setup_telemetry("insights-cli")
     metadata, events = load_match(args.match_dir)
     out = Path(args.out or Path(args.match_dir) / "insights")
     out.mkdir(parents=True, exist_ok=True)

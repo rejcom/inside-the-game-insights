@@ -13,7 +13,7 @@ This repository is being built in stages:
 | Ingest → Interpret → Explain → Render → Personalize | `insights`: multi-agent pipeline (Microsoft Agent Framework on Microsoft Foundry) producing timed overlay cues | ✅ ready |
 | Experience | `webapp`: broadcast-style web player with analyst / casual / club-fan / player-focus modes | ✅ ready |
 | Cloud | Azure Container Apps + managed identity → Foundry (keyless) | ✅ live |
-| Cloud+ | Event Hubs ingest, Foundry tracing & evaluations | 🚧 next |
+| Cloud+ | Functions → Event Hubs → worker → broadcast ("On air"), Foundry tracing & evaluations | ✅ live |
 
 ---
 
@@ -71,16 +71,49 @@ and 0 unverified numbers. Median agent latency was 2–4 s, and the full match p
 ## Architecture on Azure
 
 ```
- Browser ──HTTPS──► Azure Container Apps (insidethegame-player, scale 0→2)
-                     │  replay bundles: recorded Foundry runs
-                     │  live mode: SSE stream, at most 2 concurrent sessions on Foundry
-                     │             (more viewers get the deterministic twins)
-                     └─ system-assigned managed identity ──RBAC "Foundry User"──► Microsoft Foundry project
-                                                                                  └─ gpt-5.4-mini (GlobalStandard)
- Image built in the cloud by Azure Container Registry Tasks (`az acr build`); no secrets in the app.
+ data provider ──HTTPS + function key──► Azure Functions "ingest" (Flex Consumption)
+   (the player's        validates every event, stamps ingestion time
+    "On air" kickoff)          │ managed identity · Event Hubs Data Sender
+                               ▼
+                    Event Hubs  match-events   (partition key = match_id → per-match ordering)
+                               │ managed identity · Data Receiver · checkpoints in Blob Storage
+                               ▼
+              Container Apps  insights-worker  (one InsightsPipeline per match, KEDA Event Hubs rule)
+                     │  Agent Framework workflow ──► Microsoft Foundry (gpt-5.4-mini, "Foundry User" RBAC)
+                     │  OpenTelemetry ──► Application Insights ──► Foundry tracing
+                               ▼
+                    Event Hubs  match-broadcast  (hello · event · moment · cue · done)
+                               ▼
+              Container Apps  insights-player  ──SSE──► every viewer (one agent run serves all viewers)
+                 also: Replay mode (recorded Foundry runs) and Live mode (per-viewer pipeline, capped at 2)
 ```
 
-Deploy or redeploy with `./deploy/azure.ps1 -FoundryResource <name> -FoundryProject <project> -Tag v2`.
+* **No secrets in code.** Every hop uses managed identities and RBAC. The only secrets are the
+  Function key and the App Insights connection string, stored as Container Apps secrets.
+* **Ordering and backpressure.** Events are partitioned by `match_id`. The worker checkpoints to
+  Blob Storage, and backlog older than 10 minutes is skipped rather than replayed through the model.
+* **Cost control.** The Function bills per execution and the player scales to zero. The worker runs
+  as one small always-on replica (0.25 vCPU). Live mode allows at most 2 concurrent Foundry sessions.
+* **Observability.** Agent runs, model calls, tool calls and workflow supersteps are traced with
+  OpenTelemetry, alongside our own `moment <kind>` spans (importance, fallbacks, verification).
+
+### Quality: Foundry evaluations
+
+`python -m insights.evaluate "data/replays/*.json"` scores agent-written overlay copy (all four
+viewer profiles, EN/CS/ES) with Foundry's built-in LLM-judge evaluators. The grounding context is
+the verified moment facts plus the agents' tool evidence. Latest run, 60 items from 5 matches
+([data/evals/foundry-eval.json](data/evals/foundry-eval.json)):
+
+| Evaluator | Passed |
+|---|---|
+| Groundedness | 59 / 60 |
+| Relevance | 60 / 60 |
+| Coherence | 60 / 60 |
+| Fluency | 59 / 60 |
+| Deterministic fact guard (local) | 60 / 60 |
+
+Deploy with `./deploy/azure.ps1` (player), then `./deploy/azure-eventing.ps1` (Functions, Event Hubs,
+worker and App Insights). Both scripts take `-FoundryResource <name> -FoundryProject <project>`.
 
 ---
 

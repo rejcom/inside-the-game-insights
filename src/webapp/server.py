@@ -24,9 +24,11 @@ from urllib.parse import parse_qs, urlparse
 
 from insights.agents import AgentSettings
 from insights.pipeline import InsightsPipeline
+from insights.telemetry import setup_telemetry
 from matchsim.stream import load_match
 
 from .bundle import REPLAY_DIR, build_bundle, slim_event
+from .onair import ONAIR
 
 STATIC = Path(__file__).parent / "static"
 SAMPLES = Path("data/samples")
@@ -90,11 +92,64 @@ class Handler(BaseHTTPRequestHandler):
             return self._send(200, body)
         if path.startswith("/api/live/"):
             return self._live(path.rsplit("/", 1)[-1], parse_qs(url.query))
+        if path == "/api/onair":
+            return self._json({"enabled": ONAIR.enabled, "can_kickoff": bool(ONAIR.ingest_url),
+                               "feeding": ONAIR.feeding, "matches": ONAIR.list()})
+        if path.startswith("/api/onair/"):
+            return self._onair(path.rsplit("/", 1)[-1])
         file = STATIC / ("index.html" if path in ("/", "") else path.lstrip("/"))
         if file.is_file() and STATIC in file.resolve().parents:
             ctype = mimetypes.guess_type(file.name)[0] or "application/octet-stream"
             return self._send(200, file.read_bytes(), ctype)
         self._json({"error": "not found"}, 404)
+
+    def do_POST(self) -> None:  # noqa: N802
+        url = urlparse(self.path)
+        if url.path.startswith("/api/kickoff/"):
+            match_id = url.path.rsplit("/", 1)[-1]
+            if not (SAMPLES / match_id).exists():
+                return self._json({"error": "unknown match"}, 404)
+            speed = max(5.0, min(60.0, float(parse_qs(url.query).get("speed", ["30"])[0])))
+            ok, msg = ONAIR.kickoff(SAMPLES / match_id, speed)
+            return self._json({"ok": ok, "message": msg}, 202 if ok else 409)
+        self._json({"error": "not found"}, 404)
+
+    def _sse_headers(self) -> None:
+        self.send_response(200)
+        self.send_header("Content-Type", "text/event-stream")
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("X-Accel-Buffering", "no")
+        self.end_headers()
+
+    def _onair(self, match_id: str) -> None:
+        sub = ONAIR.subscribe(match_id)
+        if sub is None:
+            return self._json({"error": "match is not on air"}, 404)
+        history, q = sub
+        self._sse_headers()
+
+        def push(kind: str, data: dict) -> None:
+            self.wfile.write(f"event: {kind}\ndata: {json.dumps(data, ensure_ascii=False)}\n\n".encode("utf-8"))
+
+        try:
+            for kind, data in history:
+                push(kind, data)
+            self.wfile.flush()
+            done = any(k == "done" for k, _ in history)
+            while not done:
+                try:
+                    kind, data = q.get(timeout=15)
+                except Exception:  # noqa: BLE001 - keep-alive comment
+                    self.wfile.write(b": keep-alive\n\n")
+                    self.wfile.flush()
+                    continue
+                push(kind, data)
+                self.wfile.flush()
+                done = kind == "done"
+        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+            pass
+        finally:
+            ONAIR.unsubscribe(match_id, q)
 
     # ------------------------------------------------------------------ live SSE
     def _live(self, match_id: str, q: dict) -> None:
@@ -143,6 +198,8 @@ def main() -> None:
     parser.add_argument("--host", default=os.getenv("HOST", "127.0.0.1"))
     parser.add_argument("--port", type=int, default=int(os.getenv("PORT", "8000")))
     args = parser.parse_args()
+    setup_telemetry("insights-player")
+    ONAIR.start()
     server = ThreadingHTTPServer((args.host, args.port), Handler)
     print(f"Inside the Game player on http://{args.host}:{args.port}")
     server.serve_forever()

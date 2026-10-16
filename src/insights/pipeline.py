@@ -21,6 +21,7 @@ from .models import MomentJob, OverlayCue, TraceStep, ViewerProfile
 from .moments import Moment, MomentDetector
 from .overlays import Producer, default_profiles, is_relevant
 from .state import MatchState
+from .telemetry import span
 from .workflow import build_workflow
 
 CueSink = Callable[[dict[str, Any]], None]
@@ -45,6 +46,7 @@ class InsightsPipeline:
         self._sem = asyncio.Semaphore(ai_concurrency)
         self._tasks: set[asyncio.Task] = set()
         self.cues: list[OverlayCue] = []
+        self.evidence: dict[str, list] = {}  # moment_id -> tool outputs the agents grounded their copy on
         self.stats = {"events": 0, "moments": 0, "agent_lane": 0, "fast_lane": 0, "cues": 0, "fallbacks": 0}
 
     @property
@@ -99,9 +101,20 @@ class InsightsPipeline:
                 return max(1.5, wall * self.speed) if self.speed > 0 else 1.5
 
             workflow = build_workflow(self.team, self.state, self.producer, latency)
-            result = await workflow.run(job)
-            outputs = result.get_outputs()
-            self._emit(outputs[0] if outputs else [], job)
+            with span(f"moment {moment.kind}", **{
+                    "insights.match_id": self.state.match_id, "insights.moment_id": moment.moment_id,
+                    "insights.moment_kind": moment.kind, "insights.importance": moment.importance,
+                    "insights.clock": moment.clock, "insights.engine": self.mode}) as s:
+                result = await workflow.run(job)
+                outputs = result.get_outputs()
+                cues = outputs[0] if outputs else []
+                if s is not None:
+                    s.set_attribute("insights.cues", len(cues))
+                    s.set_attribute("insights.fallbacks", sum(t.mode == "fallback" for t in job.trace))
+                    s.set_attribute("insights.verified", not job.verification_issues)
+                    s.set_attribute("insights.narrator_attempts", job.narrative_attempts)
+            self.evidence[moment.moment_id] = job.evidence
+            self._emit(cues, job)
 
     async def drain(self) -> None:
         while self._tasks:

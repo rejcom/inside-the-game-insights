@@ -1,0 +1,50 @@
+{
+  "bundles": [
+    "syn-balanced-riv-hbc-200.json",
+    "syn-comeback-kba-hbc-211.json",
+    "syn-dominant-but-losing-hbc-ngu-218.json",
+    "syn-late-drama-riv-ngu-206.json",
+    "syn-red-card-riv-hbc-200.json"
+  ],
+  "items": 60,
+  "evaluators": [
+    "groundedness",
+    "relevance",
+    "coherence",
+    "fluency"
+  ],
+  "local_fact_guard": {
+    "items": 60,
+    "passed": 60,
+    "failures": []
+  },
+  "foundry": {
+    "status": "completed",
+    "result_counts": {
+      "errored": 0,
+      "failed": 2,
+      "passed": 58,
+      "total": 60
+    },
+    "per_evaluator": {
+      "groundedness": {
+        "passed": 59,
+        "failed": 1
+      },
+      "relevance": {
+        "passed": 60,
+        "failed": 0
+      },
+      "coherence": {
+        "passed": 60,
+        "failed": 0
+      },
+      "fluency": {
+        "passed": 59,
+        "failed": 1
+      }
+    },
+    "report_url": "(Foundry portal > Evaluations; link omitted from the public repo)",
+    "error": null
+  }
+}

@@ -16,6 +16,7 @@ from typing import Any
 
 from insights.agents import AgentSettings
 from insights.pipeline import InsightsPipeline
+from insights.telemetry import setup_telemetry
 from matchsim.stream import load_match
 
 REPLAY_DIR = Path("data/replays")
@@ -60,8 +61,8 @@ def build_bundle(match_dir: str | Path, engine: str = "offline", concurrency: in
         "profiles": [p.model_dump() for p in pipe.profiles],
         "events": [slim_event(e) for e in events],
         "cues": cues,
-        "moments": [{k: v for k, v in m.items() if k != "facts"} | {"headline_facts": {
-            k: v for k, v in m["facts"].items() if not isinstance(v, (dict, list))}} for m in moments],
+        "moments": moments,
+        "evidence": pipe.evidence,
         "series": series,
         "run_stats": stats,
     }
@@ -73,6 +74,7 @@ def main() -> None:
     parser.add_argument("--engine", choices=["foundry", "offline"], default="foundry")
     parser.add_argument("--out", default=str(REPLAY_DIR))
     args = parser.parse_args()
+    setup_telemetry("insights-bundle")
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     for d in args.match_dirs:

@@ -509,9 +509,12 @@ function setupTransport() {
     if (e.key >= "1" && e.key <= "4") { const p = S.profiles[Number(e.key) - 1]; if (p) selectProfile(p.profile_id); }
     if (e.key === "n") $("nextMomentBtn").click();
   });
-  $("matchSelect").onchange = (e) => (S.mode === "live" ? startLive() : loadReplay(e.target.value));
+  $("matchSelect").onchange = (e) => (S.mode !== "live" ? loadReplay(e.target.value)
+    : $("modeOnAir").classList.contains("active") ? startOnAir() : startLive());
   $("modeReplay").onclick = () => { setMode("replay"); loadReplay($("matchSelect").value); };
   $("modeLive").onclick = () => { setMode("live"); startLive(); };
+  $("modeOnAir").onclick = () => { setMode("live"); $("modeLive").classList.remove("active");
+    $("modeOnAir").classList.add("active"); startOnAir(); };
   window.addEventListener("resize", drawTimeline);
 }
 
@@ -519,6 +522,7 @@ function setMode(mode) {
   S.mode = mode;
   $("modeReplay").classList.toggle("active", mode === "replay");
   $("modeLive").classList.toggle("active", mode === "live");
+  $("modeOnAir").classList.remove("active");
   $("liveBanner").hidden = mode !== "live";
 }
 
@@ -526,10 +530,37 @@ function setMode(mode) {
 function stopLive() { if (S.es) { S.es.close(); S.es = null; } }
 
 function startLive() {
+  connectStream(`/api/live/${$("matchSelect").value}?speed=${S.speed}&engine=foundry`, "LIVE");
+}
+
+async function startOnAir() {
+  stopLive();
+  const id = $("matchSelect").value;
+  const banner = $("liveBanner");
+  banner.hidden = false;
+  const status = await (await fetch("/api/onair")).json();
+  if (!status.enabled) { banner.textContent = "ON AIR unavailable: Event Hubs not configured"; return; }
+  let entry = status.matches.find((m) => m.match_id === id && !m.done);
+  if (!entry) {
+    if (!status.can_kickoff) { banner.textContent = "ON AIR: nothing on air for this match"; return; }
+    const r = await fetch(`/api/kickoff/${id}?speed=${Math.max(5, Math.min(60, S.speed))}`, { method: "POST" });
+    const k = await r.json();
+    if (!r.ok) { banner.textContent = `ON AIR: ${k.message}`; return; }
+    banner.textContent = "KICK-OFF · Function → Event Hubs → worker…";
+    for (let i = 0; i < 40 && !entry; i++) {
+      await new Promise((res) => setTimeout(res, 1000));
+      entry = (await (await fetch("/api/onair")).json()).matches.find((m) => m.match_id === id && !m.done);
+    }
+    if (!entry) { banner.textContent = "ON AIR: worker did not start (is it scaled up?)"; return; }
+  }
+  connectStream(`/api/onair/${id}`, "ON AIR");
+}
+
+function connectStream(url, label) {
   stopLive();
   S.playing = false;
   const id = $("matchSelect").value;
-  const es = new EventSource(`/api/live/${id}?speed=${S.speed}&engine=foundry`);
+  const es = new EventSource(url);
   S.es = es;
   es.addEventListener("hello", (m) => {
     const h = JSON.parse(m.data);
@@ -537,7 +568,9 @@ function startLive() {
       profiles: h.profiles, events: [], cues: [], series: [] });
     S.p1Live = 2760;
     S.liveT = 0; S.liveWall = performance.now();
-    $("liveBanner").textContent = h.engine === "foundry" ? "LIVE · Foundry agents running" : "LIVE · offline twins";
+    const via = h.source === "event_hubs" ? " · via Event Hubs" : "";
+    $("liveBanner").textContent = `${label} · ${h.engine === "foundry" ? "Foundry agents" : "offline twins"}${via}`;
+    $("liveBanner").hidden = false;
   });
   es.addEventListener("event", (m) => {
     const e = JSON.parse(m.data);

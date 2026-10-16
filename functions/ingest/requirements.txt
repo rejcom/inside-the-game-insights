@@ -1,0 +1,3 @@
+azure-functions
+azure-eventhub>=5.15
+azure-identity>=1.26
