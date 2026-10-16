@@ -12,7 +12,8 @@ This repository is being built in stages:
 | Data | `matchsim`: synthetic, football-realistic match generator + live event streamer | ✅ ready |
 | Ingest → Interpret → Explain → Render → Personalize | `insights`: multi-agent pipeline (Microsoft Agent Framework on Microsoft Foundry) producing timed overlay cues | ✅ ready |
 | Experience | `webapp`: broadcast-style web player with analyst / casual / club-fan / player-focus modes | ✅ ready |
-| Cloud | Event Hubs ingest, Container Apps, Foundry tracing & evaluations | 🚧 planned |
+| Cloud | Azure Container Apps + managed identity → Foundry (keyless) | ✅ live |
+| Cloud+ | Event Hubs ingest, Foundry tracing & evaluations | 🚧 next |
 
 ---
 
@@ -63,6 +64,23 @@ Outputs go to `<match>/insights/`: `overlays.jsonl` (cues), `moments.jsonl`, `pr
 70 moments → 154 personalized cues for 4 viewers. All 31 agent workflows ran on the LLM with 0 fallbacks
 and 0 unverified numbers. Median agent latency was 2–4 s, and the full match processed in 79 s with
 6 parallel workflows.
+
+**▶ Live demo:** https://insidethegame-player.whiteplant-48237189.swedencentral.azurecontainerapps.io
+(the app scales to zero, so the first load may take a few seconds)
+
+## Architecture on Azure
+
+```
+ Browser ──HTTPS──► Azure Container Apps (insidethegame-player, scale 0→2)
+                     │  replay bundles: recorded Foundry runs
+                     │  live mode: SSE stream, at most 2 concurrent sessions on Foundry
+                     │             (more viewers get the deterministic twins)
+                     └─ system-assigned managed identity ──RBAC "Foundry User"──► Microsoft Foundry project
+                                                                                  └─ gpt-5.4-mini (GlobalStandard)
+ Image built in the cloud by Azure Container Registry Tasks (`az acr build`); no secrets in the app.
+```
+
+Deploy or redeploy with `./deploy/azure.ps1 -FoundryResource <name> -FoundryProject <project> -Tag v2`.
 
 ---
 

@@ -1,0 +1,10 @@
+.venv
+.git
+.github
+.claude
+.env
+**/__pycache__
+.pytest_cache
+data/generated
+data/**/insights
+tests

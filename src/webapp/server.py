@@ -15,6 +15,7 @@ import argparse
 import asyncio
 import json
 import mimetypes
+import os
 import threading
 from functools import lru_cache
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -29,6 +30,9 @@ from .bundle import REPLAY_DIR, build_bundle, slim_event
 
 STATIC = Path(__file__).parent / "static"
 SAMPLES = Path("data/samples")
+# Public deployments must not let anyone fan out unlimited model calls: at most this many live
+# sessions run on Foundry at once; further viewers get the deterministic twins.
+LIVE_FOUNDRY_SLOTS = threading.BoundedSemaphore(int(os.getenv("LIVE_FOUNDRY_MAX", "2")))
 
 
 def list_matches() -> list[dict]:
@@ -100,7 +104,8 @@ class Handler(BaseHTTPRequestHandler):
         engine = q.get("engine", ["foundry"])[0]
         metadata, events = load_match(SAMPLES / match_id)
         settings = AgentSettings.from_env()
-        if engine == "offline":
+        holds_slot = engine != "offline" and settings.enabled and LIVE_FOUNDRY_SLOTS.acquire(blocking=False)
+        if not holds_slot:
             settings.endpoint = None
 
         self.send_response(200)
@@ -128,12 +133,15 @@ class Handler(BaseHTTPRequestHandler):
             push("done", stats)
         except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
             pass  # viewer closed the tab
+        finally:
+            if holds_slot:
+                LIVE_FOUNDRY_SLOTS.release()
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Inside the Game web player")
-    parser.add_argument("--host", default="127.0.0.1")
-    parser.add_argument("--port", type=int, default=8000)
+    parser.add_argument("--host", default=os.getenv("HOST", "127.0.0.1"))
+    parser.add_argument("--port", type=int, default=int(os.getenv("PORT", "8000")))
     args = parser.parse_args()
     server = ThreadingHTTPServer((args.host, args.port), Handler)
     print(f"Inside the Game player on http://{args.host}:{args.port}")
