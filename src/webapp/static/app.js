@@ -58,8 +58,19 @@ async function loadMatches() {
     o.value = m.match_id;
     sel.appendChild(o);
   }
-  const preferred = matches.find((m) => m.replay && m.scenario === "comeback") || matches.find((m) => m.replay) || matches[0];
+  // Deep links for demos: ?match=<id>&t=<match seconds>&profile=<id>&speed=<n>&play=1
+  const q = new URLSearchParams(location.search);
+  const preferred = matches.find((m) => m.match_id === q.get("match"))
+    || matches.find((m) => m.replay && m.scenario === "comeback") || matches.find((m) => m.replay) || matches[0];
   if (preferred) { sel.value = preferred.match_id; await loadReplay(preferred.match_id); }
+  if (q.get("profile")) selectProfile(q.get("profile"));
+  if (q.get("speed")) {
+    S.speed = Number(q.get("speed")) || S.speed;
+    [...$("speeds").children].forEach((c) => c.classList.toggle("active", c.textContent === `${S.speed}×`));
+  }
+  if (q.get("t")) { S.t = Math.max(0, Math.min(S.duration, Number(q.get("t")))); clearOverlays(); }
+  if (q.get("play") === "1") S.playing = true;
+  render();
 }
 
 async function loadReplay(matchId) {

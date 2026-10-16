@@ -66,6 +66,8 @@ Outputs go to `<match>/insights/`: `overlays.jsonl` (cues), `moments.jsonl`, `pr
 and 0 unverified numbers. Median agent latency was 2–4 s, and the full match processed in 79 s with
 6 parallel workflows.
 
+**📄 Submission kit (pitch, description, demo script):** [docs/submission.md](docs/submission.md)
+
 **▶ Live demo:** https://insidethegame-player.whiteplant-48237189.swedencentral.azurecontainerapps.io
 (the app scales to zero, so the first load may take a few seconds)
 
