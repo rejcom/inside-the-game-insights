@@ -86,7 +86,9 @@ function setBundle(b) {
   for (const side of ["home", "away"]) for (const p of S.meta[side].players) S.players[p.player_id] = { ...p, team_id: S.meta[side].team_id };
   for (const e of b.events || []) addEvent(e);
   for (const c of b.cues || []) S.cues.push(c);
-  S.duration = S.events.length ? S.events[S.events.length - 1].match_seconds : 5700;
+  // Play until the last graphic has finished (the full-time recap is shown after the final whistle).
+  const lastCue = S.cues.reduce((m, c) => Math.max(m, c.display_at_match_seconds + c.duration_s), 0);
+  S.duration = Math.max(S.events.length ? S.events[S.events.length - 1].match_seconds : 5700, lastCue);
   if (!S.profiles.find((p) => p.profile_id === S.profileId)) S.profileId = S.profiles[0].profile_id;
   S.t = 0; S.feedKey = ""; S.compareKey = "";
   clearOverlays();
@@ -516,6 +518,7 @@ function setupTransport() {
     if (next) { S.t = Math.max(0, next._start - 4); S.feedKey = ""; S.playing = true; clearOverlays(); render(); }
   };
   document.addEventListener("keydown", (e) => {
+    if (e.target.closest && e.target.closest("input, textarea, select")) return; // typing, not a shortcut
     if (e.code === "Space" && e.target === document.body) { e.preventDefault(); $("playBtn").click(); }
     if (e.key >= "1" && e.key <= "4") { const p = S.profiles[Number(e.key) - 1]; if (p) selectProfile(p.profile_id); }
     if (e.key === "n") $("nextMomentBtn").click();

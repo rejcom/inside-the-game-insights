@@ -9,3 +9,6 @@ dist/
 data/generated/
 data/**/insights/
 .claude/
+
+# demo video build outputs
+demo/out/

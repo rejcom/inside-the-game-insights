@@ -1,0 +1,23 @@
+:root { --bg: #0b0f17; --panel: #121826; --line: #243049; --text: #e8edf7; --muted: #8d99b3;
+  --accent: #7c5cff; --accent-2: #19d3a2; --warn: #ffb547; }
+* { box-sizing: border-box; margin: 0; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); color: var(--text);
+  font-family: Inter, system-ui, "Segoe UI", sans-serif; }
+body { display: flex; flex-direction: column; justify-content: center; align-items: center;
+  background: radial-gradient(circle at 50% 0%, rgba(124, 92, 255, .25), transparent 60%), var(--bg); }
+.display { font-family: "Barlow Condensed", "Arial Narrow", sans-serif; text-transform: uppercase; letter-spacing: 2px; }
+.mark { width: 96px; height: 96px; border-radius: 24px; margin-bottom: 28px;
+  background: conic-gradient(from 210deg, var(--accent), var(--accent-2), #ff5d8f, var(--accent));
+  box-shadow: 0 0 60px rgba(124, 92, 255, .55); }
+.fade { opacity: 0; animation: in .7s ease forwards; }
+.d1 { animation-delay: .3s } .d2 { animation-delay: .8s } .d3 { animation-delay: 1.3s } .d4 { animation-delay: 1.8s }
+.d5 { animation-delay: 2.3s } .d6 { animation-delay: 2.8s } .d7 { animation-delay: 3.3s } .d8 { animation-delay: 3.8s }
+.d9 { animation-delay: 4.3s } .d10 { animation-delay: 4.8s } .d11 { animation-delay: 5.3s } .d12 { animation-delay: 5.8s }
+@keyframes in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.box { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px 24px; }
+.box b { display: block; font-size: 26px; } .box span { color: var(--muted); font-size: 18px; }
+.box.ai { border-color: rgba(124, 92, 255, .7); background: rgba(124, 92, 255, .14); }
+.box.det { border-color: rgba(25, 211, 162, .55); background: rgba(25, 211, 162, .08); }
+.box.az { border-color: rgba(0, 120, 212, .7); background: rgba(0, 120, 212, .12); }
+.arrow { color: #56627d; font-size: 40px; align-self: center; }
+.caption { position: absolute; bottom: 48px; color: var(--muted); font-size: 20px; letter-spacing: .5px; }

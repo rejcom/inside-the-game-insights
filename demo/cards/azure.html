@@ -1,0 +1,24 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="card.css"></head>
+<body>
+  <h2 class="display fade" style="font-size:64px;margin-bottom:44px">Event-driven on Azure</h2>
+  <div style="display:flex;gap:18px;align-items:center">
+    <div class="box fade d1"><b>Match feed</b><span>data provider</span></div>
+    <div class="arrow fade d1">→</div>
+    <div class="box az fade d2"><b>Azure Functions</b><span>validate · ingest</span></div>
+    <div class="arrow fade d2">→</div>
+    <div class="box az fade d3"><b>Event Hubs</b><span>ordered per match</span></div>
+    <div class="arrow fade d3">→</div>
+    <div class="box az fade d4"><b>Container Apps</b><span>insights worker</span></div>
+    <div class="arrow fade d4">→</div>
+    <div class="box ai fade d5"><b>Microsoft Foundry</b><span>gpt-5.4-mini agents</span></div>
+    <div class="arrow fade d6">→</div>
+    <div class="box az fade d6"><b>Broadcast</b><span>every viewer · MCP</span></div>
+  </div>
+  <div style="display:flex;gap:22px;margin-top:54px">
+    <div class="box det fade d7"><b>Managed identities</b><span>RBAC on every hop · no keys</span></div>
+    <div class="box ai fade d8"><b>Foundry tracing</b><span>OpenTelemetry · App Insights</span></div>
+    <div class="box ai fade d9"><b>Foundry evaluations</b><span>groundedness <b style="display:inline;font-size:26px;color:var(--accent-2)">59/60</b> · relevance 60/60</span></div>
+  </div>
+</body></html>
