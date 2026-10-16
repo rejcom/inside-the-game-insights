@@ -115,6 +115,14 @@
         <div class="legend-modes"><span class="mode llm">LLM</span><span class="mode deterministic">deterministic</span><span class="mode fallback">fallback</span></div>
       </div>
       <ol class="feed" id="feed"></ol>
+      <form class="ask" id="askForm" autocomplete="off">
+        <div class="ask-head">Ask the studio <span>Foundry agent · MCP tools · no spoilers</span></div>
+        <div class="ask-answer" id="askAnswer" hidden></div>
+        <div class="ask-row">
+          <input id="askInput" maxlength="300" placeholder="Why is this team losing despite more chances?" aria-label="Question for the studio analyst">
+          <button type="submit" id="askBtn">Ask</button>
+        </div>
+      </form>
     </aside>
   </main>
   <script src="/app.js"></script>

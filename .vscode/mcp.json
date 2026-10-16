@@ -1,0 +1,15 @@
+{
+  "servers": {
+    "inside-the-game": {
+      "type": "http",
+      "url": "https://insidethegame-mcp.whiteplant-48237189.swedencentral.azurecontainerapps.io/mcp"
+    },
+    "inside-the-game-local": {
+      "type": "stdio",
+      "command": "${workspaceFolder}/.venv/Scripts/python.exe",
+      "args": ["-m", "insights.mcp_server"],
+      "env": { "PYTHONPATH": "${workspaceFolder}/src" },
+      "cwd": "${workspaceFolder}"
+    }
+  }
+}

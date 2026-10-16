@@ -232,3 +232,18 @@ select {
 .mode.fallback { background: rgba(255, 181, 71, .15); border-color: rgba(255, 181, 71, .5); color: #ffd79a; }
 .verified { font-size: 11px; color: var(--accent-2); margin-top: 6px; }
 .verified.bad { color: var(--warn); }
+
+/* ---------------------------------------------------------------- ask the studio */
+.ask { border-top: 1px solid var(--line); padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 8px; }
+.ask-head { font-family: var(--display); text-transform: uppercase; letter-spacing: 1px; font-size: 16px; color: #cbd3e6; }
+.ask-head span { font-family: var(--body); text-transform: none; letter-spacing: 0; font-size: 11px; color: var(--muted); margin-left: 6px; }
+.ask-row { display: flex; gap: 6px; }
+.ask-row input { flex: 1; min-width: 0; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; color: var(--text); font: inherit; font-size: 13px; }
+.ask-row button { background: var(--accent); color: #fff; border: 0; border-radius: 8px; padding: 0 14px; cursor: pointer; font-weight: 600; }
+.ask-row button:disabled { opacity: .5; cursor: wait; }
+.ask-answer { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; font-size: 13px; line-height: 1.45; max-height: 260px; overflow-y: auto; }
+.ask-answer .q { color: var(--muted); font-size: 12px; margin-bottom: 4px; }
+.ask-answer .stats { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.ask-answer .stats span { background: rgba(124, 92, 255, .14); border: 1px solid rgba(124, 92, 255, .4); border-radius: 6px; padding: 3px 7px; font-size: 12px; }
+.ask-answer .meta { margin-top: 8px; font-size: 11px; color: var(--accent-2); }
+.ask-answer .meta.warn { color: var(--warn); }

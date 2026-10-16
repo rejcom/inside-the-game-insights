@@ -35,6 +35,7 @@ SAMPLES = Path("data/samples")
 # Public deployments must not let anyone fan out unlimited model calls: at most this many live
 # sessions run on Foundry at once; further viewers get the deterministic twins.
 LIVE_FOUNDRY_SLOTS = threading.BoundedSemaphore(int(os.getenv("LIVE_FOUNDRY_MAX", "2")))
+ASK_SLOTS = threading.BoundedSemaphore(int(os.getenv("ASK_MAX", "3")))
 
 
 def list_matches() -> list[dict]:
@@ -105,6 +106,8 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self) -> None:  # noqa: N802
         url = urlparse(self.path)
+        if url.path == "/api/ask":
+            return self._ask()
         if url.path.startswith("/api/kickoff/"):
             match_id = url.path.rsplit("/", 1)[-1]
             if not (SAMPLES / match_id).exists():
@@ -113,6 +116,28 @@ class Handler(BaseHTTPRequestHandler):
             ok, msg = ONAIR.kickoff(SAMPLES / match_id, speed)
             return self._json({"ok": ok, "message": msg}, 202 if ok else 409)
         self._json({"error": "not found"}, 404)
+
+    def _ask(self) -> None:
+        from insights.studio import ask
+
+        try:
+            body = json.loads(self.rfile.read(min(int(self.headers.get("Content-Length", "0")), 8192)) or b"{}")
+            match_id, question = str(body["match_id"]), str(body["question"]).strip()[:300]
+            minute = max(1, min(130, int(body.get("minute", 90))))
+            language = str(body.get("language", "en"))[:8]
+        except (ValueError, KeyError, TypeError):
+            return self._json({"error": "expected JSON with match_id, minute, question"}, 400)
+        if not question or not (SAMPLES / match_id).exists():
+            return self._json({"error": "unknown match or empty question"}, 400)
+        if not ASK_SLOTS.acquire(blocking=False):
+            return self._json({"error": "the studio is busy, try again in a moment"}, 429)
+        try:
+            result = asyncio.run(ask(match_id, minute, question, language))
+            return self._json(result)
+        except Exception as exc:  # noqa: BLE001 - surface a friendly error, never a stack trace
+            return self._json({"error": f"studio unavailable: {type(exc).__name__}"}, 503)
+        finally:
+            ASK_SLOTS.release()
 
     def _sse_headers(self) -> None:
         self.send_response(200)

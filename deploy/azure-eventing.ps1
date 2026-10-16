@@ -80,4 +80,12 @@ az containerapp secret set -n $Player -g $ResourceGroup --secrets "feedurl=https
 az containerapp update -n $Player -g $ResourceGroup --image "$Registry.azurecr.io/player:$Tag" `
     --set-env-vars "EVENTHUB_NAMESPACE=$fqns" EVENTHUB_OUT=match-broadcast FEED_INGEST_URL=secretref:feedurl `
                    APPLICATIONINSIGHTS_CONNECTION_STRING=secretref:appi -o none
+# MCP server (read-only, scale to zero) and the player's studio agent pointing at it
+az containerapp create -n insidethegame-mcp -g $ResourceGroup --environment $Environment --image "$Registry.azurecr.io/player:$Tag" `
+    --registry-server "$Registry.azurecr.io" --registry-identity system --system-assigned --command insights-mcp `
+    --ingress external --target-port 8001 --min-replicas 0 --max-replicas 2 --cpu 0.25 --memory 0.5Gi `
+    --env-vars MCP_TRANSPORT=http HOST=0.0.0.0 PORT=8001 -o none
+$mcp = az containerapp show -n insidethegame-mcp -g $ResourceGroup --query properties.configuration.ingress.fqdn -o tsv
+az containerapp update -n $Player -g $ResourceGroup --set-env-vars "MCP_URL=https://$mcp/mcp" -o none
+
 Write-Host "Done. Connect $AppInsights to the Foundry project (Foundry portal > Tracing) to see agent traces there."

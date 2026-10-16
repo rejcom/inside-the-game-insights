@@ -588,7 +588,50 @@ function connectStream(url, label) {
   es.onerror = () => { if (S.es === es && es.readyState === EventSource.CLOSED) stopLive(); };
 }
 
+// ------------------------------------------------------------------ ask the studio (Foundry agent + MCP)
+function currentMinute() {
+  const clock = clockAt(S.t);
+  const m = clock.includes("+") ? Number(clock.split("+")[0]) : Number(clock.split(":")[0]) + 1;
+  return Math.max(1, Math.min(130, m || 1));
+}
+
+function setupAsk() {
+  $("askForm").onsubmit = async (ev) => {
+    ev.preventDefault();
+    const q = $("askInput").value.trim();
+    if (!q || !S.meta) return;
+    const box = $("askAnswer"), btn = $("askBtn");
+    const minute = currentMinute();
+    box.hidden = false; box.innerHTML = "";
+    box.appendChild(el("div", "q", `${minute}' · ${q}`));
+    box.appendChild(el("div", null, "The studio analyst is looking it up…"));
+    btn.disabled = true;
+    try {
+      const r = await fetch("/api/ask", { method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ match_id: S.meta.match_id, minute, question: q, language: profile().language }) });
+      const a = await r.json();
+      box.innerHTML = "";
+      box.appendChild(el("div", "q", `${minute}' · ${q}`));
+      box.appendChild(el("div", null, a.answer || a.error || "No answer."));
+      if (a.key_stats && a.key_stats.length) {
+        const st = el("div", "stats");
+        for (const s of a.key_stats) st.appendChild(el("span", null, `${s.label}: ${s.value}`));
+        box.appendChild(st);
+      }
+      if (a.tools_used) {
+        const ok = a.spoiler_safe && a.facts_verified;
+        box.appendChild(el("div", `meta${ok ? "" : " warn"}`,
+          `MCP tools: ${[...new Set(a.tools_used)].join(", ") || "none"} · ${(a.latency_ms / 1000).toFixed(1)}s · ` +
+          `${a.spoiler_safe ? "no spoilers" : "spoiler blocked"} · ${a.facts_verified ? "facts verified" : "unverified numbers"}`));
+      }
+    } catch (err) {
+      box.lastChild.textContent = `Studio unavailable: ${err}`;
+    } finally { btn.disabled = false; }
+  };
+}
+
 // ------------------------------------------------------------------ boot
+setupAsk();
 setupTransport();
 loadMatches().catch((err) => { $("engineBadge").textContent = `Failed to load: ${err}`; });
 requestAnimationFrame(tick);

@@ -14,6 +14,7 @@ This repository is being built in stages:
 | Experience | `webapp`: broadcast-style web player with analyst / casual / club-fan / player-focus modes | ✅ ready |
 | Cloud | Azure Container Apps + managed identity → Foundry (keyless) | ✅ live |
 | Cloud+ | Functions → Event Hubs → worker → broadcast ("On air"), Foundry tracing & evaluations | ✅ live |
+| MCP | Match-intelligence MCP server + "Ask the studio" Foundry agent that uses it | ✅ live |
 
 ---
 
@@ -85,6 +86,7 @@ and 0 unverified numbers. Median agent latency was 2–4 s, and the full match p
                     Event Hubs  match-broadcast  (hello · event · moment · cue · done)
                                ▼
               Container Apps  insights-player  ──SSE──► every viewer (one agent run serves all viewers)
+                     └─ "Ask the studio" agent ──MCP (streamable HTTP)──► Container Apps insights-mcp
                  also: Replay mode (recorded Foundry runs) and Live mode (per-viewer pipeline, capped at 2)
 ```
 
@@ -212,6 +214,31 @@ top→bottom. `metadata.attacking_direction` tells which goal each team attacks 
 | `player_alert` | threshold triggers for overlays: `top_speed` (≥ 32 km/h) and `distance_milestone` (10 km, 12 km) |
 | `physical_update` | every 5 minutes: per-player distance, top speed, sprints, fatigue; team distance |
 | `added_time`, `period_start`, `period_end`, `match_start`, `match_end` | match flow |
+
+## MCP: match intelligence for any agent
+
+`insights.mcp_server` exposes the deterministic match state as **read-only MCP tools**:
+`list_matches`, `get_match_snapshot`, `get_window_metrics`, `get_team_totals`, `get_player_stats`,
+`list_players`, `list_key_moments` and `get_broadcast_copy`. Every tool takes an optional `minute`
+and replays the match only up to that minute, so answers are **spoiler-safe by construction**.
+
+* **Remote (Azure Container Apps, streamable HTTP):**
+  `https://insidethegame-mcp.whiteplant-48237189.swedencentral.azurecontainerapps.io/mcp`
+* **Local (stdio):** `insights-mcp`. A ready-made [.vscode/mcp.json](.vscode/mcp.json) lets
+  GitHub Copilot agent mode in VS Code use both. Claude Desktop and other MCP clients work the same way.
+
+**Ask the studio.** In the web player, a viewer can ask a question at any point in the match. A
+Foundry agent (Agent Framework, `MCPStreamableHTTPTool`) answers in the viewer's language using
+only the MCP tools, and two deterministic guardrails check the result:
+* **Spoiler guard.** Every tool call must evaluate at or before the viewer's minute; otherwise the
+  agent retries once with feedback.
+* **Fact guard.** Every number in the answer must appear in a tool result.
+
+The UI shows which MCP tools ran, the latency, and both verdicts.
+
+```bash
+insights-studio syn-comeback-kba-hbc-211 70 "Why are Kingsbridge losing when they have more of the game?"
+```
 
 ## `webapp`: broadcast overlay player
 

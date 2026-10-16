@@ -14,14 +14,17 @@ dependencies = []
 [project.optional-dependencies]
 agents = ["agent-framework-core>=1.22", "agent-framework-foundry>=1.15", "azure-identity>=1.26", "pydantic>=2",
           "azure-monitor-opentelemetry>=1.8", "azure-eventhub>=5.15", "azure-eventhub-checkpointstoreblob-aio>=1.2",
-          "aiohttp>=3.9"]
-dev = ["pytest>=8", "agent-framework-core>=1.22", "agent-framework-foundry>=1.15", "azure-identity>=1.26"]
+          "aiohttp>=3.9", "mcp>=1.24,<2"]
+dev = ["pytest>=8", "agent-framework-core>=1.22", "agent-framework-foundry>=1.15", "azure-identity>=1.26",
+       "mcp>=1.24,<2"]
 
 [project.scripts]
 matchsim = "matchsim.cli:main"
 insights = "insights.cli:main"
 insights-worker = "insights.worker:main"
 insights-player = "webapp.server:main"
+insights-mcp = "insights.mcp_server:main"
+insights-studio = "insights.studio:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
