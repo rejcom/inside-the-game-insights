@@ -4,6 +4,7 @@ Everything needed for the Innovation Studio project page: the elevator pitch, th
 description, testing instructions for judges, and a shot-by-shot script for the demo video
 (under 2 minutes).
 
+**Demo video:** https://youtu.be/_QToXIQQ3Nk
 **Live demo:** https://insidethegame-player.whiteplant-48237189.swedencentral.azurecontainerapps.io
 **Repository:** https://github.com/rejcom/inside-the-game-insights
 **MCP server:** https://insidethegame-mcp.whiteplant-48237189.swedencentral.azurecontainerapps.io/mcp

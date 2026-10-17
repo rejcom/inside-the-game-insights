@@ -68,6 +68,8 @@ and 0 unverified numbers. Median agent latency was 2–4 s, and the full match p
 
 **📄 Submission kit (pitch, description, demo script):** [docs/submission.md](docs/submission.md)
 
+**🎬 Demo video:** https://youtu.be/_QToXIQQ3Nk
+
 **▶ Live demo:** https://insidethegame-player.whiteplant-48237189.swedencentral.azurecontainerapps.io
 (the app scales to zero, so the first load may take a few seconds)
 
